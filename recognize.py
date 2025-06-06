@@ -23,9 +23,8 @@ class Statistic:
         roi = thresh[top_left[1] + 45:top_left[1] + 80, top_left[0]:top_left[0] + 62]
         # roi = thresh[top_left[1]:top_left[1] + 80, top_left[0]:top_left[0] + 60]
         data = pytesseract.image_to_string(roi, lang='eng',config='--psm 8 -c tessedit_char_whitelist=0123456789x')
-        if not data:
-            return
-        
+        data = data[:-1]
+
         if shouldShowROIandThresh:
             cv2.imshow('thresh', thresh)
             cv2.imshow('ROI', roi)
@@ -41,6 +40,8 @@ class Statistic:
             plt.title('Detected Point'), plt.xticks([]), plt.yticks([])
             plt.show()
 
+        if not data:
+            return
 
         dataInt = 0
 
@@ -49,7 +50,10 @@ class Statistic:
         except:
             print("Statistic is possibly censored.")
         
-        if data[0] == "$" or dataInt > 999 or len(data) > 4:
+        if data[0] == "$" or dataInt > 999 or len(data) > 3:
+            data = data[1:]
+
+        if len(data) > 3:
             data = data[1:]
 
         self.value = data
