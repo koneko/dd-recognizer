@@ -18,26 +18,27 @@ class Statistic:
         top_left = max_loc
         thresh = 255 - cv2.threshold(screenshot, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
         roi = thresh[top_left[1] + 50:top_left[1] + 80, top_left[0]:top_left[0] + 62]
-        data = pytesseract.image_to_string(roi, lang='eng',config='--psm 7 -c tessedit_char_whitelist=0123456789x')
+        # roi = thresh[top_left[1]:top_left[1] + 80, top_left[0]:top_left[0] + 60]
+        data = pytesseract.image_to_string(roi, lang='eng',config='--psm 8 -c tessedit_char_whitelist=0123456789x')
         if not data:
             return
-        self.value = data
         if data[0] == "$" or int(data) > 999:
             data = data[1:]
+        self.value = data
         print(self.name + " " + self.value)
         cv2.imshow('thresh', thresh)
         cv2.imshow('ROI', roi)
         cv2.waitKey()    
-        w, h = self.template.shape[::-1]
-        bottom_right = (top_left[0] + w, top_left[1] + h)
-        cv2.rectangle(screenshot,top_left, bottom_right, 255, 2)
-        plt.subplot(121),plt.imshow(result,cmap = 'gray')
-        plt.title('Matching Result'), plt.xticks([]), plt.yticks([])
-        plt.subplot(122),plt.imshow(screenshot,cmap = 'gray')
-        plt.title('Detected Point'), plt.xticks([]), plt.yticks([])
-        plt.show()
+        # w, h = self.template.shape[::-1]
+        # bottom_right = (top_left[0] + w, top_left[1] + h)
+        # cv2.rectangle(screenshot,top_left, bottom_right, 255, 2)
+        # plt.subplot(121),plt.imshow(result,cmap = 'gray')
+        # plt.title('Matching Result'), plt.xticks([]), plt.yticks([])
+        # plt.subplot(122),plt.imshow(screenshot,cmap = 'gray')
+        # plt.title('Detected Point'), plt.xticks([]), plt.yticks([])
+        # plt.show()
 
-image = "im5.png"
+image = "im4.png"
 
 hh = Statistic("HeroHealth")
 hh.match(image)
